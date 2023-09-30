@@ -1,6 +1,8 @@
 import { Container, Box } from '@chakra-ui/react'
 import { Header } from '../../components/Header/Header'
 import { TableComponent } from '../../components/Table/Table'
+import { apiGit } from '../../api/gitApi'
+import { useEffect, useState } from 'react'
 
 const columns = [
   'Author', 'Email', 'Commit Message', "Commit Link", "Created"
@@ -46,6 +48,31 @@ const data = [
 
 
 export const Home = () => {
+  const [repoData, setRepoData] = useState<any>([])
+  const getRepoGitData = async () =>{
+    try {
+      const {data} = await apiGit.get('')
+      const newData = data?.data?.map((e) => ({
+        name: e.author.login,
+        avatar: e.author.avatar_url,
+        mail: e.commit.author?.email,
+        commit: e.commit.message,
+        url: e.html_url,
+        created: e.commit.author.date,
+      }));
+  
+      setRepoData((prevData) => [...newData]);
+      // console.log(data.data);
+      // return data.data
+    } catch (error) {
+      console.log(error);
+    }
+  }
+  // console.log(repoData);
+  
+  useEffect(()=> {
+    getRepoGitData()
+  },[])
 
   return (
     <>
@@ -54,7 +81,7 @@ export const Home = () => {
       {/* <Container w='100%'> */}
         <TableComponent
           columns={columns}
-          data={data}
+          data={repoData}
         />
       {/* </Container> */}
     </Container>
