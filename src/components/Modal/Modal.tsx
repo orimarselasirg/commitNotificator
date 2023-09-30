@@ -33,13 +33,11 @@ export const ModalComponent = ({isOpen, onClose, data}: Props) => {
           <ModalHeader>Author Commit's information</ModalHeader>
           <ModalCloseButton />
           <ModalBody>
-            {/* <Lorem count={2} /> */}
             <Stack w='100%' mb='5' alignItems='center'>
               <Avatar src={data.avatar} name={data.name} size='2xl' alignSelf='center'/>
               <Heading as='h4'>{data.name}</Heading>
               <Text>{data.email}</Text>
             </Stack>
-
           </ModalBody>
 
           <ModalFooter>

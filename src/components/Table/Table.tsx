@@ -2,7 +2,6 @@ import {
   Table,
   Thead,
   Tbody,
-  // Tfoot,
   Tr,
   Th,
   Td,
@@ -16,9 +15,18 @@ import { formatterDate } from '../../helpers/dateFormatter'
 import { ModalComponent } from '../Modal/Modal'
 import { useState } from 'react';
 
+type ResponseTableData = {
+  name: string
+  avatar: string
+  mail: string
+  commit: string
+  url: string
+  created: string 
+}
+
 interface Props {
   columns: string[]
-  data: any[]
+  data: ResponseTableData[]
   tableCaption: string
 }
 

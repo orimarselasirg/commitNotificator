@@ -1,4 +1,4 @@
-import { Box, Avatar, Heading, Stack, Badge, Wrap, WrapItem } from '@chakra-ui/react'
+import { Box, Avatar, Heading, Stack, Badge} from '@chakra-ui/react'
 
 export const Header = () => {
   return (
