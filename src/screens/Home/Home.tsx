@@ -49,9 +49,11 @@ const data = [
 
 export const Home = () => {
   const [repoData, setRepoData] = useState<any>([])
+  const [urlCommits, setCommitUrl] = useState<string>()
   const getRepoGitData = async () =>{
     try {
       const {data} = await apiGit.get('')
+      console.log(data);
       const newData = data?.data?.map((e) => ({
         name: e.author.login,
         avatar: e.author.avatar_url,
@@ -64,11 +66,11 @@ export const Home = () => {
       setRepoData((prevData) => [...newData]);
       // console.log(data.data);
       // return data.data
+      setCommitUrl(data.url)
     } catch (error) {
       console.log(error);
     }
   }
-  // console.log(repoData);
   
   useEffect(()=> {
     getRepoGitData()
@@ -82,6 +84,7 @@ export const Home = () => {
         <TableComponent
           columns={columns}
           data={repoData}
+          tableCaption={`Commits ${urlCommits?.split('/')[5]}'s history`}
         />
       {/* </Container> */}
     </Container>
