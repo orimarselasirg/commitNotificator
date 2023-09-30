@@ -8,10 +8,13 @@ import {
   Td,
   TableCaption,
   TableContainer,
-  Link 
+  Link,
+  useDisclosure
 } from '@chakra-ui/react'
 import { ExternalLinkIcon } from '@chakra-ui/icons'
 import { formatterDate } from '../../helpers/dateFormatter'
+import { ModalComponent } from '../Modal/Modal'
+import { useState } from 'react';
 
 interface Props {
   columns: string[]
@@ -19,24 +22,40 @@ interface Props {
   tableCaption: string
 }
 
-export const TableComponent = ({columns, data, tableCaption}: Props) => {
+type AuthoData = {
+  name: string
+  email: string
+  avatar: string
+}
 
+export const TableComponent = ({columns, data, tableCaption}: Props) => {
+  const { isOpen, onOpen, onClose } = useDisclosure()
+  const [authorData, setAuthorData] = useState<AuthoData>({
+    name: '',
+    email: '',
+    avatar: ''
+  })
+
+  const onOpenModal = (data:AuthoData) => {
+    setAuthorData(data)
+    onOpen()
+  }
   return (
     <TableContainer>
-      <Table w='100%' variant='striped' colorScheme='purple' size='xl'>
+      <Table variant='striped' colorScheme='gray' size='md'>
         <TableCaption sx={{fontWeight: 500, marginTop: 20}}>{tableCaption}</TableCaption>
-        <Thead bg='#C5C5C5'>
+        <Thead bg='gray.500'>
           {
             columns.map((column, index) => (
-              <Th key={index}>{column}</Th>
+              <Th key={index} color='white'>{column}</Th>
             ))
           }
         </Thead>
         <Tbody >
           {
             data.map((data, index) => (
-              <Tr key={index} bg={index % 2 === 0 ? '#E1E0E2' : ''} sx={{fontSize: 12}}>
-                <Td>{data.name}</Td>
+              <Tr key={index} sx={{fontSize: 13}}>
+                <Td onClick={()=>onOpenModal({name: data.name, email: data.mail, avatar: data.avatar})} sx={{cursor: 'pointer', textDecoration: 'underline'}}>{data.name}</Td>
                 <Td>{data.mail}</Td>
                 <Td>{data.commit}</Td>
                 <Td>
@@ -49,6 +68,7 @@ export const TableComponent = ({columns, data, tableCaption}: Props) => {
             ))
           }
         </Tbody>
+        <ModalComponent isOpen={isOpen} onClose={onClose} data={authorData}/>
       </Table>
     </TableContainer>
   )

@@ -1,59 +1,24 @@
-import { Container, Box } from '@chakra-ui/react'
+import { Container, Tabs, TabList, TabPanels, Tab, TabPanel, useToast } from '@chakra-ui/react'
 import { Header } from '../../components/Header/Header'
 import { TableComponent } from '../../components/Table/Table'
 import { apiGit } from '../../api/gitApi'
 import { useEffect, useState } from 'react'
+import { Loading } from '../../components/Loading/Loading'
 
 const columns = [
   'Author', 'Email', 'Commit Message', "Commit Link", "Created"
 ]
-
-const data = [
-  {
-    name: 'Ramiro grisales',
-    email: 'ramirogrisales@gmail.com',
-    commit: 'Feat: this is a commit message',
-    url : 'https://github.com/',
-    created: '2017-10-10'
-  },
-  {
-    name: 'Ramiro grisales',
-    email: 'ramirogrisales@gmail.com',
-    commit: 'Feat: this is a commit message',
-    url : 'https://github.com/',
-    created: '2017-10-10'
-  },
-  {
-    name: 'Ramiro grisales',
-    email: 'ramirogrisales@gmail.com',
-    commit: 'Feat: this is a commit message',
-    url : 'https://github.com/',
-    created: '2017-10-10'
-  },
-  {
-    name: 'Ramiro grisales',
-    email: 'ramirogrisales@gmail.com',
-    commit: 'Feat: this is a commit message',
-    url : 'https://github.com/',
-    created: '2017-10-10'
-  },
-  {
-    name: 'Ramiro grisales',
-    email: 'ramirogrisales@gmail.com',
-    commit: 'Feat: this is a commit message',
-    url : 'https://github.com/',
-    created: '2017-10-10'
-  },
-]
-
-
 export const Home = () => {
+  const toast = useToast()
+  const [isLoading, setIsLoading] = useState<boolean>(false)
+  const [isError, setIsError] = useState<boolean>(false)
   const [repoData, setRepoData] = useState<any>([])
   const [urlCommits, setCommitUrl] = useState<string>()
-  const getRepoGitData = async () =>{
+
+  const getRepoGitData = async (repoName: string) =>{
+    setIsLoading(true)
     try {
-      const {data} = await apiGit.get('')
-      console.log(data);
+      const {data} = await apiGit.get(`?repoName=${repoName}`)
       const newData = data?.data?.map((e) => ({
         name: e.author.login,
         avatar: e.author.avatar_url,
@@ -62,32 +27,66 @@ export const Home = () => {
         url: e.html_url,
         created: e.commit.author.date,
       }));
-  
-      setRepoData((prevData) => [...newData]);
-      // console.log(data.data);
-      // return data.data
+      setRepoData([...newData]);
       setCommitUrl(data.url)
+      setIsError(false)
+      // throw Error
     } catch (error) {
-      console.log(error);
+      setIsError(true)
+      toast({
+        title: 'Oops! Something went wrong',
+        description: "Please call the administrator",
+        status: 'error',
+        duration: 4000,
+        isClosable: true,
+      })
+    } finally {
+      setIsLoading(false)
     }
   }
   
   useEffect(()=> {
-    getRepoGitData()
+    getRepoGitData('commitNotificator')
   },[])
 
   return (
-    <>
-    <Container w='100vw' h='100vh' overflowX='hidden'>
-      <Header/>
-      {/* <Container w='100%'> */}
-        <TableComponent
-          columns={columns}
-          data={repoData}
-          tableCaption={`Commits ${urlCommits?.split('/')[5]}'s history`}
-        />
-      {/* </Container> */}
-    </Container>
-    </>
+      <Container maxW='100vw'>
+        <Header/>
+          
+        <Tabs variant='unstyled' colorScheme='gray' isFitted >
+          <TabList>
+            <Tab onClick={()=>getRepoGitData('commitNotificator')} _selected={{ color: 'white', bg: 'gray.600' }}>Frontend Commits History</Tab>
+            <Tab onClick={()=>getRepoGitData('tweetApp')} _selected={{ color: 'white', bg: 'gray.600' }}>Backend Commits History</Tab>
+          </TabList>
+          <TabPanels>
+            <TabPanel>
+              {
+                isLoading 
+                ?
+                <Loading/> 
+                :
+                <TableComponent
+                  columns={columns}
+                  data={repoData}
+                  tableCaption={ isError ? "We can't show you commit's history in this moment, please try again!":`Commits ${urlCommits?.split('/')[5]}'s history`}
+                />
+              }
+            </TabPanel>
+            <TabPanel>
+            {
+                isLoading 
+                ? 
+                <Loading/> 
+                :
+                <TableComponent
+                  columns={columns}
+                  data={repoData}
+                  tableCaption={isError ? "We can't show you commit's history in this moment, please try again!" :`Commits ${urlCommits?.split('/')[5]}'s history`}
+                />
+              }
+            </TabPanel>
+          </TabPanels>
+        </Tabs>
+      </Container>
   )
 }
