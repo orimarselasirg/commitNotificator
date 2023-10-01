@@ -14,19 +14,11 @@ import { ExternalLinkIcon } from '@chakra-ui/icons'
 import { formatterDate } from '../../helpers/dateFormatter'
 import { ModalComponent } from '../Modal/Modal'
 import { useState } from 'react';
-
-type ResponseTableData = {
-  name: string
-  avatar: string
-  mail: string
-  commit: string
-  url: string
-  created: string 
-}
+import { CommitsReponse } from '../../interfaces/gitInterface';
 
 interface Props {
   columns: string[]
-  data: ResponseTableData[]
+  data: CommitsReponse[]
   tableCaption: string
 }
 
@@ -53,11 +45,13 @@ export const TableComponent = ({columns, data, tableCaption}: Props) => {
       <Table variant='striped' colorScheme='gray' size='md'>
         <TableCaption sx={{fontWeight: 500, marginTop: 20}}>{tableCaption}</TableCaption>
         <Thead bg='gray.500'>
-          {
-            columns.map((column, index) => (
-              <Th key={index} color='white'>{column}</Th>
-            ))
-          }
+          <Tr>
+            {
+              columns.map((column, index) => (
+                <Th key={index} color='white'>{column}</Th>
+              ))
+            }
+          </Tr>
         </Thead>
         <Tbody >
           {
@@ -76,8 +70,8 @@ export const TableComponent = ({columns, data, tableCaption}: Props) => {
             ))
           }
         </Tbody>
-        <ModalComponent isOpen={isOpen} onClose={onClose} data={authorData}/>
       </Table>
+        <ModalComponent isOpen={isOpen} onClose={onClose} data={authorData}/>
     </TableContainer>
   )
 }
