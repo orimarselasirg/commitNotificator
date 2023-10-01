@@ -45,8 +45,8 @@ export const Home = () => {
   const getAllRepoList = async () => {
     setIsLoading(true)
     try {
-      const {data} = await apiGit.get<RepoList[]>('repo-list')
-      const repoFiltered = data.filter((e:RepoList) => e.owner === import.meta.env.VITE_REPO_OWNER)
+      const {data} = await apiGit.get<RepoList[]>('/repo-list')
+      const repoFiltered = data?.filter((e:RepoList) => e.owner === import.meta.env.VITE_REPO_OWNER)
       setOptionList(repoFiltered)
       setIsError(false)
     } catch (error) {
