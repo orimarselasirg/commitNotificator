@@ -79,7 +79,7 @@ export const Home = () => {
         <Box w='15%' position='absolute' top='65px' zIndex={100} ml='8px'>
             <Select placeholder='you can select another repo' variant='outline' color='gray.500' size='xs' onChange={(e)=> setOptionSelected(e.target.value)}>
               {
-                optionList.map((e:RepoList) => (
+                optionList?.map((e:RepoList) => (
                   <option key={e.id} value={e.name}>{e.name}</option>
                 ))
               }
