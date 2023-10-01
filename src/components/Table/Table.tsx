@@ -55,6 +55,8 @@ export const TableComponent = ({columns, data, tableCaption}: Props) => {
         </Thead>
         <Tbody >
           {
+            data.length > 0 
+            ?
             data.map((data, index) => (
               <Tr key={index} sx={{fontSize: 13}}>
                 <Td onClick={()=>onOpenModal({name: data.name, email: data.mail, avatar: data.avatar})} sx={{cursor: 'pointer', textDecoration: 'underline'}}>{data.name}</Td>
@@ -68,6 +70,7 @@ export const TableComponent = ({columns, data, tableCaption}: Props) => {
                 <Td>{formatterDate(data.created)}</Td>
               </Tr>
             ))
+            : []
           }
         </Tbody>
       </Table>
