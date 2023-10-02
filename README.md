@@ -15,8 +15,7 @@ This project works with Node.js version >= 18. To validate the version and check
 node -v
 ```
 
-If you don't have Node.js installed or your version is less than 18, I recommend installing it by clicking here. [node]
-(https://nodejs.org/)
+If you don't have Node.js installed or your version is less than 18, I recommend installing it by clicking here. [node](https://nodejs.org/)
 
 If you prefer to use Yarn as your package manager, you can check if it's installed by running the following command in your preferred console:
 ```
